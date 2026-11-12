@@ -5,6 +5,27 @@
 画像本身的版本单独记在 `profile/aesthetic-profile.json` 的 `profile_version`，
 这里记的是 **skill / 工具链**的版本，两者不要混。
 
+## [0.2.0] - 2026-11-12
+
+327 种风格补齐 284 张示例图。
+
+### 新增
+
+- `scripts/fetch_style_images.py --provider tavily`（默认）：借 Tavily 搜 `pexels.com` 照片页，
+  再由照片 ID 直连 Pexels CDN。**绕开 Unsplash 免费档 50 次/小时**，且 Pexels 授权免费可商用；
+  配 2 个 Tavily key 轮换、搜索词从窄到宽回退（`angelcore` 这类图库里没有索引的冷门词自动退到
+  `white clouds` 等可搜词），实际使用的搜索词写入 `imgQuery`，可逐条审计。
+- `--only s314 --query "..."`：对某条不满意的图单独重抓，不用重跑全量。
+- `scripts/normalize_images.py`：统一压到长边 900px / q72，图片总量 36.2MB → 17.9MB。
+
+### 结果
+
+- 284 / 327 有真实示例图；43 条无图，全部是「用途类」条目（信息图、PPT 封面、各类壁纸、
+  社媒配图等）—— 图库里没有一种照片能代表「PPT 封面」，留空显示配色示意比硬配更诚实。
+- 抽样核对 69 张：没有「完全无关」的图，约 85% 直接对得上，约 15% 偏宽泛（如
+  `fairycore` 退到 `fireflies` 后拿到浮萍照）。窄词的准确率天然低于宽词，这是检索的固有代价。
+- 远端仓库 315 个文件 / 19.5MB，随机 5 张图 sha256 与本地完全一致。
+
 ## [0.1.1] - 2026-11-12
 
 ### 修正
