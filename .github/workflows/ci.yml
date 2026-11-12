@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: 校验画像结构
+        run: python scripts/profile_tool.py validate
+
+      - name: 数据文件与生成物不能漂移
+        run: python scripts/build_survey_js.py --check
+
+      - name: 单元测试
+        run: python -m unittest discover -s tests -v
+
+      - name: 人读摘要可重新生成
+        run: python scripts/profile_tool.py render

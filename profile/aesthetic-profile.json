@@ -1,0 +1,115 @@
+{
+  "$schema": "./profile.schema.json",
+  "schema_version": "1.0",
+  "profile_version": "0.1.0",
+  "updated": "2026-11-12",
+  "owner": "kuangketongxue",
+  "status": "seed",
+  "confidence": 0.3,
+  "axes": {
+    "temperature": null,
+    "brightness": null,
+    "density": null,
+    "saturation": null,
+    "contrast": null,
+    "organic": null,
+    "realism": null,
+    "era": null
+  },
+  "liked_styles": [],
+  "disliked_styles": [],
+  "palette": {
+    "primary": [],
+    "accent": [],
+    "neutral": [],
+    "avoid": []
+  },
+  "keywords": {
+    "positive": [],
+    "negative": []
+  },
+  "hard_rules": [
+    {
+      "rule": "视觉沟通必须用真实存在的图片，禁止用手绘 SVG、示意图或自造图标充数",
+      "why": "他看不懂手绘示意，等于没沟通",
+      "evidence": "图片你就不能网上找现成的吗，你自己画的我完全看不懂",
+      "date": "2026-11-11"
+    },
+    {
+      "rule": "任何图片展示都要能点开放大看细节，缩略图不算交付",
+      "why": "小图看不清材质与构图，无法判断喜欢与否",
+      "evidence": "图片要可以点击放大啊",
+      "date": "2026-11-11"
+    },
+    {
+      "rule": "给选项要给全貌，不要抽样精选；宁可分类穷举后再分层，也不要只给 20 个让他以为这就是全部",
+      "why": "抽样会被当成偷懒和视野缺失",
+      "evidence": "才25种吗，不应该至少上百种吗，全世界所有的艺术风格",
+      "date": "2026-11-12"
+    },
+    {
+      "rule": "分类口径按「能不能拿来用」而不是按学术体系；标题写用途，不写流派史",
+      "why": "他要的是可执行的找图与设计依据，不是艺术史百科",
+      "evidence": "是所有可以作为壁纸、头像、设计等等的",
+      "date": "2026-11-12"
+    }
+  ],
+  "contexts": {
+    "web": null,
+    "wallpaper": null,
+    "avatar": null,
+    "poster": null,
+    "slide": null,
+    "doc": null
+  },
+  "evidence": [
+    {
+      "date": "2026-11-11",
+      "source": "chat",
+      "signal": "拒绝手绘示意图作为选项配图，要求用网络现成真实照片",
+      "quote": "图片你就不能网上找现成的吗，你自己画的我完全看不懂",
+      "effect": "写入 hard_rules 第 1 条；所有调研/方案配图改为真实图片",
+      "strength": "strong"
+    },
+    {
+      "date": "2026-11-11",
+      "source": "chat",
+      "signal": "要求图片可点击放大",
+      "quote": "图片要可以点击放大啊",
+      "effect": "写入 hard_rules 第 2 条；灯箱成为图片展示的默认件",
+      "strength": "strong"
+    },
+    {
+      "date": "2026-11-12",
+      "source": "chat",
+      "signal": "对只给 25 种风格表示不满，认为应覆盖上百种",
+      "quote": "才25种吗，不应该至少上百种吗，全世界所有的艺术风格",
+      "effect": "写入 hard_rules 第 3 条；风格库重建为 327 条 / 14 大类",
+      "strength": "strong"
+    },
+    {
+      "date": "2026-11-12",
+      "source": "chat",
+      "signal": "把风格范围界定为「所有可作为壁纸/头像/设计的」而非艺术史流派",
+      "quote": "是所有可以作为壁纸、头像、设计等等的",
+      "effect": "写入 hard_rules 第 4 条；分类改为按用途与视觉特征",
+      "strength": "strong"
+    },
+    {
+      "date": "2026-11-12",
+      "source": "survey",
+      "signal": "认可「一种风格一张代表图」的组织方式，覆盖优先于深度",
+      "quote": "一种风格一张即可，尽量所有风格审美的全覆盖",
+      "effect": "调研页每种风格只挂 1 张氛围参考图，不为单风格堆图",
+      "strength": "medium"
+    },
+    {
+      "date": "2026-11-12",
+      "source": "design-accepted",
+      "signal": "在 AI 日报的四个选项里选了「沿用骨架换深蓝/青色科技感配色」，未反对冷色科技方向",
+      "quote": "沿用骨架换配色",
+      "effect": "仅记录，不写入 contexts.web —— 属我给的推荐项，他只是确认，不等于主动偏好",
+      "strength": "weak"
+    }
+  ]
+}

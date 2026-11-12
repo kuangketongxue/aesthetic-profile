@@ -1,0 +1,388 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/kuangketongxue/aesthetic-profile/profile/profile.schema.json",
+  "title": "Aesthetic Profile",
+  "description": "机器可读的审美画像。设计 agent 读它就能定配色、明暗、繁简、题材与图片风格，不用每次重新问人。所有字段都允许为 null，表示「尚未测量」，禁止用猜测填满。",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "profile_version",
+    "updated",
+    "status",
+    "axes",
+    "evidence"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "指向本 schema 的相对路径，供编辑器补全用。"
+    },
+    "schema_version": {
+      "type": "string",
+      "description": "数据结构版本。字段增删改时升这里。",
+      "pattern": "^\\d+\\.\\d+$"
+    },
+    "profile_version": {
+      "type": "string",
+      "description": "画像版本，语义化。patch=新增证据；minor=新增维度或场景；major=推翻主轴。",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "updated": {
+      "type": "string",
+      "description": "最后更新日期 YYYY-MM-DD。",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "owner": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "画像主人。开源后别人 fork 改成自己。"
+    },
+    "status": {
+      "type": "string",
+      "description": "seed=只有零星观察；calibrated=已做过完整调研；stable=多轮设计验证过。",
+      "enum": [
+        "seed",
+        "calibrated",
+        "stable"
+      ]
+    },
+    "confidence": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 1,
+      "description": "整体置信度。seed 通常 ≤0.35；跑完调研可到 0.8；多轮实战验证后 ≥0.9。"
+    },
+    "axes": {
+      "type": "object",
+      "description": "八个连续轴，0-100。null = 未测量。禁止为了「看起来完整」而填中间值 50。",
+      "additionalProperties": false,
+      "properties": {
+        "temperature": {
+          "$ref": "#/definitions/axis",
+          "description": "0 极暖（橙金红）→ 100 极冷（蓝青紫）"
+        },
+        "brightness": {
+          "$ref": "#/definitions/axis",
+          "description": "0 极暗（夜、暗调）→ 100 极亮（白、高调）"
+        },
+        "density": {
+          "$ref": "#/definitions/axis",
+          "description": "0 极简（大留白、单一主体）→ 100 极繁（满版、信息密集）"
+        },
+        "saturation": {
+          "$ref": "#/definitions/axis",
+          "description": "0 低饱和（莫兰迪、灰调）→ 100 高饱和（霓虹、荧光）"
+        },
+        "contrast": {
+          "$ref": "#/definitions/axis",
+          "description": "0 低对比（柔和过渡）→ 100 高对比（硬光、剪影）"
+        },
+        "organic": {
+          "$ref": "#/definitions/axis",
+          "description": "0 几何人造（网格、直线、晶体）→ 100 有机自然（植物、流体、地貌）"
+        },
+        "realism": {
+          "$ref": "#/definitions/axis",
+          "description": "0 抽象图形/3D 渲染/插画 → 100 真实摄影"
+        },
+        "era": {
+          "$ref": "#/definitions/axis",
+          "description": "0 复古（胶片、旧印刷、年代感）→ 100 未来（赛博、全息、太空）"
+        }
+      }
+    },
+    "liked_styles": {
+      "type": "array",
+      "description": "明确喜欢的风格，id 对应 survey/styles.json。weight 0-1 表示喜欢强度。",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "weight",
+          "evidence"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^s\\d{3}$"
+          },
+          "weight": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "evidence": {
+            "type": "string",
+            "description": "证据出处，如 survey:2026-11-12 或 chat:2026-12-01"
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "disliked_styles": {
+      "type": "array",
+      "description": "明确不要的风格。宁可少写，也不要凭感觉写——错一条会长期压抑正确选项。",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "evidence"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^s\\d{3}$"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "evidence": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "palette": {
+      "type": "object",
+      "description": "从喜欢的风格里聚合出的色板，全部用 #RRGGBB。",
+      "additionalProperties": false,
+      "properties": {
+        "primary": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "description": "主色，通常 1-3 个"
+        },
+        "accent": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "description": "点缀色，小面积高饱和"
+        },
+        "neutral": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "description": "中性/背景色"
+        },
+        "avoid": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "description": "明确不要的色"
+        }
+      }
+    },
+    "keywords": {
+      "type": "object",
+      "description": "找图关键词。positive 直接粘进 Unsplash / Pexels / 搜索；negative 用于排除。",
+      "additionalProperties": false,
+      "properties": {
+        "positive": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "negative": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "hard_rules": {
+      "type": "array",
+      "description": "硬约束，任何设计都必须遵守，优先级高于一切偏好。来自用户的明确否定。",
+      "items": {
+        "type": "object",
+        "required": [
+          "rule",
+          "evidence",
+          "date"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "rule": {
+            "type": "string",
+            "description": "一句话规则，祈使句"
+          },
+          "why": {
+            "type": "string",
+            "description": "为什么，写清后果"
+          },
+          "evidence": {
+            "type": "string",
+            "description": "用户原话"
+          },
+          "date": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          }
+        }
+      }
+    },
+    "contexts": {
+      "type": "object",
+      "description": "分场景的精修偏好。同一个人的壁纸和 PPT 常常完全不同，不要互相套用。",
+      "additionalProperties": false,
+      "properties": {
+        "web": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/context"
+            }
+          ]
+        },
+        "wallpaper": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/context"
+            }
+          ]
+        },
+        "avatar": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/context"
+            }
+          ]
+        },
+        "poster": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/context"
+            }
+          ]
+        },
+        "slide": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/context"
+            }
+          ]
+        },
+        "doc": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/context"
+            }
+          ]
+        }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "description": "证据日志，只追加不改。画像里每个判断都必须能追溯到这里的一条。",
+      "items": {
+        "type": "object",
+        "required": [
+          "date",
+          "source",
+          "signal",
+          "strength"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "date": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "source": {
+            "type": "string",
+            "description": "survey / chat / review / design-accepted / design-rejected"
+          },
+          "signal": {
+            "type": "string",
+            "description": "观察到了什么，客观描述"
+          },
+          "quote": {
+            "type": "string",
+            "description": "用户原话（若有），不改写"
+          },
+          "effect": {
+            "type": "string",
+            "description": "这条证据让画像改了什么"
+          },
+          "strength": {
+            "type": "string",
+            "enum": [
+              "weak",
+              "medium",
+              "strong"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "axis": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 100
+    },
+    "context": {
+      "type": "object",
+      "description": "单个场景的偏好。未测就整块 null，不要留空对象假装测过。",
+      "additionalProperties": false,
+      "properties": {
+        "axes": {
+          "type": "object"
+        },
+        "palette": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "notes": {
+          "type": "string"
+        },
+        "evidence": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
