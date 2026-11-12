@@ -43,14 +43,28 @@
 - 其余 294 条**不配图**，页面显示由该风格色板生成的配色示意块，明确标注「暂无示例图」。
 - 一张图最多服务 2 种风格（测试会拦住轮流贴图）。
 
-要把剩下 294 张补齐，用 Pexels 免费 key 按关键词搜（key 只在本机，不进仓库）：
+要把剩下 294 张补齐，用免费的图库 key 按关键词搜（key 只在本机，不进仓库）：
 
 ```bash
-export PEXELS_KEY=你的key          # Windows: set PEXELS_KEY=...
+export PIXABAY_KEY=你的key          # Windows: set PIXABAY_KEY=...
 python scripts/fetch_style_images.py --dry-run      # 先看会搜什么词，不耗额度
-python scripts/fetch_style_images.py --max 180     # 200 次/小时，约两轮跑完
+python scripts/fetch_style_images.py --max 180     # 100 次/分钟，约两轮跑完
 python scripts/build_survey_js.py && python scripts/build_catalog.py
 ```
+
+图库选型（2026-11-12 实测，别走弯路）：
+
+| 通道 | 结论 |
+|---|---|
+| `--provider tavily`（默认） | **推荐**。借 Tavily 搜 `pexels.com` 照片页，再用照片 ID 直连 Pexels CDN。不受 Unsplash 50 次/小时限制，Pexels 授权免费可商用，约 15 分钟跑完 |
+| `--provider unsplash` | key 要过审，免费档 **50 次/小时**，327 张要跑 6~7 小时 |
+| `--provider pixabay` | 注册即出 key、100 次/分钟，但官方接口要 key |
+| Pexels 官方 API | 已停止签发新 key |
+| Openverse / Wikimedia Commons | 部分网络下直接超时 |
+
+`--provider tavily` 复用 `~/.workbuddy/skills/parallel-search/config.json` 里的 Tavily key，
+也可以用环境变量 `TAVILY_API_KEY` 覆盖。它只用来**找照片页**，图片本体仍从 Pexels CDN 取，
+所以授权链条是干净的（Pexels License），也顺带解决了「冷门词在图库里搜不到」的问题。
 
 脚本会断点续跑（进度存 `survey/.fetch-progress.json`），每张图校验可解码并压到 1200px，
 作者与出处记进 `survey/image-credits.json`。

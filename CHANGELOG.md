@@ -16,8 +16,12 @@
 
 ### 新增
 
-- `scripts/fetch_style_images.py`：按风格关键词从 Pexels / Unsplash 搜真实示例图，断点续跑、
+- `scripts/fetch_style_images.py`：按风格关键词从 Pixabay / Pexels / Unsplash 搜真实示例图（默认 Pixabay：
+  实测 Pexels 已停发新 key、Unsplash 免费档 50 次/小时、Openverse 与 Wikimedia 在本机被挡），断点续跑、
   额度保护、逐张校验可解码并压缩；作者与出处写入 `survey/image-credits.json`。
+- `scripts/fetch_style_images.py` 增加 `--provider tavily`（默认）：借 Tavily 搜 pexels.com 照片页 +
+  照片 ID 直连 Pexels CDN，绕开 Unsplash 50 次/小时限制；带 2 个 key 自动轮换、搜索词从窄到宽回退、
+  实际搜索词写进 `imgQuery` 可审计。
 - `survey/index.html`：无图风格显示色板渐变块 + 「暂无示例图」；灯箱只在有图风格之间翻页。
 - 测试增至 25 个（新增 `imgKind` 自洽、配图不重复、`image_policy` 存在）。
 
