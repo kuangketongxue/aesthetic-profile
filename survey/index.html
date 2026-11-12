@@ -40,6 +40,10 @@ main{padding:26px 0 60px}
 .thumb:hover img{transform:scale(1.05)}
 .zoom{position:absolute;right:8px;bottom:8px;background:rgba(6,26,51,.82);color:#fff;font-size:11px;padding:3px 8px;border-radius:99px;opacity:0;transition:.2s}
 .thumb:hover .zoom{opacity:1}
+.thumb-ph{display:flex;align-items:flex-end;justify-content:flex-start;cursor:default}
+.thumb-ph .ph-tag{font-size:11px;color:rgba(255,255,255,.92);background:rgba(6,26,51,.45);padding:3px 8px;border-radius:99px;margin:8px}
+.badge{position:absolute;left:8px;top:8px;background:rgba(6,26,51,.72);color:#fff;font-size:11px;padding:2px 7px;border-radius:99px}
+.imgnote{margin:6px 0 0;font-size:11px;line-height:1.5;color:#7a8b9c}
 .card-body{padding:11px 12px 12px}
 .card-body h3{font-size:14px;margin:0 0 3px;color:var(--navy);font-weight:800;line-height:1.35}
 .en{font-size:11px;color:var(--muted);display:block;margin-bottom:6px}
@@ -204,19 +208,32 @@ pre#out{white-space:pre-wrap;word-break:break-word;background:var(--bg);border:1
       return (s.cn+' '+s.en+' '+s.desc+' '+s.group+' '+s.kw.join(' ')).toLowerCase().indexOf(q)>=0;
     });
   }
+  function grad(colors){
+    var c=colors&&colors.length?colors:['#dfe7ef'];
+    if(c.length===1)return c[0];
+    var stops=c.map(function(x,i){return x+' '+(Math.round(i*100/(c.length-1)))+'%';}).join(',');
+    return 'linear-gradient(135deg,'+stops+')';
+  }
   function styleCard(s){
     var on=state.styleLikes.indexOf(s.id)>=0;
     var sw=s.colors.map(function(c){return '<i style="background:'+esc(c)+'"></i>';}).join('');
     var kw=s.kw.slice(0,3).map(function(k){return '<span>'+esc(k)+'</span>';}).join('');
+    var hasImg=!!s.img;
+    // 没有核实过的示例图就不放照片：只给配色示意，避免"图不对文"。
+    var visual=hasImg
+      ? '<button class="thumb" data-zoom="'+s.id+'" aria-label="放大 '+esc(s.cn)+'">'
+        +'<img src="'+esc(s.img)+'" alt="'+esc(s.cn)+'" loading="lazy">'
+        +'<span class="zoom">点击放大</span><span class="badge">示例</span></button>'
+      : '<div class="thumb thumb-ph" style="background:'+esc(grad(s.colors))+'" aria-hidden="true">'
+        +'<span class="ph-tag">配色示意 · 暂无示例图</span></div>';
+    var note=hasImg&&s.imgNote?'<p class="imgnote">'+esc(s.imgNote)+'</p>':'';
     return '<article class="card'+(on?' is-liked':'')+'" data-card="'+s.id+'">'
-      +'<button class="thumb" data-zoom="'+s.id+'" aria-label="放大 '+esc(s.cn)+'">'
-      +'<img src="'+esc(s.img)+'" alt="'+esc(s.cn)+'" loading="lazy" onerror="this.style.display=\'none\'">'
-      +'<span class="zoom">点击放大</span></button>'
+      +visual
       +'<div class="card-body"><h3>'+esc(s.cn)+'</h3><span class="en">'+esc(s.en)+'</span>'
-      +'<p class="desc">'+esc(s.desc)+'</p><div class="swatches">'+sw+'</div>'
+      +'<p class="desc">'+esc(s.desc)+'</p><div class="swatches">'+sw+'</div>'+note
       +'<div class="kws">'+kw+'</div><div class="acts">'
       +'<button class="like'+(on?' is-on':'')+'" data-like="'+s.id+'">'+(on?'♥ 已喜欢':'♡ 喜欢')+'</button>'
-      +'<button class="zbtn" data-zoom="'+s.id+'">放大</button>'
+      +(hasImg?'<button class="zbtn" data-zoom="'+s.id+'">放大</button>':'')
       +'</div></div></article>';
   }
   function renderGrid(){
@@ -361,7 +378,7 @@ pre#out{white-space:pre-wrap;word-break:break-word;background:var(--bg);border:1
     if(t.id==='btn-more'){showCap+=60;renderGrid();return;}
     if(t.dataset.tab){tab=t.dataset.tab;query='';$('q').value='';showCap=60;renderTabs();renderGrid();return;}
     if(t.dataset.like){toggleStyle(t.dataset.like);return;}
-    if(t.dataset.zoom){var list=matched();for(var i=0;i<list.length;i++)if(list[i].id===t.dataset.zoom){openLb(list,i,'style');break;}return;}
+    if(t.dataset.zoom){var list=matched().filter(function(x){return !!x.img;});for(var i=0;i<list.length;i++)if(list[i].id===t.dataset.zoom){openLb(list,i,'style');break;}return;}
     if(t.dataset.vlike){var id=t.dataset.vlike,at=state.likes.indexOf(id);if(at>=0)state.likes.splice(at,1);else state.likes.push(id);save();renderVisual();return;}
     if(t.dataset.vzoom){for(var j=0;j<P.length;j++)if(P[j].id===t.dataset.vzoom){openLb(P,j,'visual');break;}return;}
     if(t.dataset.bg){state.bg=t.dataset.bg;save();renderVisual();toast('已记为想要的日报背景，生成画像后告诉我即可。');return;}

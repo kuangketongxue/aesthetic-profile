@@ -190,6 +190,27 @@ class TestSurveyData(unittest.TestCase):
         missing = [n for n in names if not (ROOT / "survey" / n).exists()]
         self.assertFalse(missing, f"缺图：{missing[:5]}")
 
+    def test_image_kind_matches_reality(self):
+        """imgKind=example 必须有图有图注；imgKind=none 必须真的没有图。"""
+        for s in self.styles["styles"]:
+            kind = s.get("imgKind")
+            self.assertIn(kind, ("example", "none"), f"{s['id']} imgKind 非法")
+            if kind == "example":
+                self.assertTrue(s["img"], f"{s['id']} 标了 example 却没图")
+                self.assertTrue(s.get("imgNote"), f"{s['id']} 有图却没写这张图实际是什么（等于没核实）")
+            else:
+                self.assertFalse(s["img"], f"{s['id']} 标了 none 却还挂着图")
+
+    def test_example_images_are_not_shared_by_many_styles(self):
+        """一张图最多服务 2 种风格——轮流贴图就是这次翻车的根因。"""
+        from collections import Counter
+        c = Counter(s["img"] for s in self.styles["styles"] if s.get("img"))
+        over = {k: v for k, v in c.items() if v > 2}
+        self.assertFalse(over, f"一张图被贴给太多种风格：{over}")
+
+    def test_image_policy_is_documented(self):
+        self.assertIn("image_policy", self.styles, "缺 image_policy 说明配图规则")
+
     def test_generated_js_matches_json(self):
         """styles.js 由 styles.json 生成，不能各说各话。"""
         rc = subprocess.run([sys.executable, str(ROOT / "scripts" / "build_survey_js.py"), "--check"],

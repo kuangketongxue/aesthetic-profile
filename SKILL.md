@@ -76,6 +76,8 @@ agent_created: true
 3. **禁止乐观填充**。`confidence` 是自我评价，宁可写低。
 4. **禁止跨场景套用**。壁纸偏暗 ≠ PPT 要暗；头像的干净背景 ≠ 网页要留白。
 5. **禁止只给抽样精选**。他要全貌时给全景 + 分层，不要给 20 个就说「这些最好」。
+7. **禁止给风格贴无关的配图**。一条风格的示例图必须是该风格的真实实例；
+   没有就留空显示配色示意。**轮流贴图＝造假标签**，这是踩过的坑（见 `survey/styles.json` 的 `image_policy`）。
 6. **禁止用示意图代替真实图片**，也不要给不能放大的缩略图（见 `hard_rules`）。
 
 ## 文件结构
@@ -89,14 +91,16 @@ aesthetic-profile/
 │   └── profile.md                 ← 人读摘要（由脚本生成，勿手改）
 ├── survey/
 │   ├── index.html                 ← 调研页：327 种风格 + 点图放大 + 导出 JSON
-│   ├── styles.json                ← 327 种视觉风格 / 14 大类
-│   └── images/                    ← 本地真实参考图
+│   ├── styles.json                ← 327 种视觉风格 / 14 大类（含 image_policy）
+│   ├── image-credits.json         ← 示例图出处
+│   └── images/                    ← 本地示例图（只放核实过的，其余留空）
 ├── references/
 │   ├── design-checklist.md        ← 画像 → 具体设计决策
 │   ├── enrichment.md              ← 画像如何持续丰富
 │   └── style-catalog.md           ← 14 大类索引（快速查风格 id）
 └── scripts/
-    └── profile_tool.py            ← validate / merge / render
+    ├── profile_tool.py            ← validate / merge / render
+    └── fetch_style_images.py      ← 按关键词补示例图（需自备 Pexels key）
 ```
 
 ## 命令

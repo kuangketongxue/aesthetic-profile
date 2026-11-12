@@ -31,6 +31,30 @@
 没有证据的字段一律 `null`，**禁止填 50 假装中性**。这条是整个设计里最重要的约束 ——
 假画像比没画像更糟，因为后来的人会以为它被确认过，从而不再问。
 
+## 示例图是怎么来的（它决定了这份东西可不可信）
+
+第一版这里是错的：327 条风格的配图是按大类**轮流贴**的，于是「天使核（白云、羽毛、纯白大理石）」
+旁边出现了星空照，「蘑菇核」旁边出现了鸟居。用户当场指出「为什么描述和图片不一致」。
+
+现在的规则写在 `survey/styles.json` 的 `image_policy` 里，并用测试锁死：
+
+- 只有**这张图确实是该风格实例**时才配图（`imgKind: "example"`），且必须用 `imgNote`
+  写清这张图实际拍的是什么。目前 33 / 327 条满足。
+- 其余 294 条**不配图**，页面显示由该风格色板生成的配色示意块，明确标注「暂无示例图」。
+- 一张图最多服务 2 种风格（测试会拦住轮流贴图）。
+
+要把剩下 294 张补齐，用 Pexels 免费 key 按关键词搜（key 只在本机，不进仓库）：
+
+```bash
+export PEXELS_KEY=你的key          # Windows: set PEXELS_KEY=...
+python scripts/fetch_style_images.py --dry-run      # 先看会搜什么词，不耗额度
+python scripts/fetch_style_images.py --max 180     # 200 次/小时，约两轮跑完
+python scripts/build_survey_js.py && python scripts/build_catalog.py
+```
+
+脚本会断点续跑（进度存 `survey/.fetch-progress.json`），每张图校验可解码并压到 1200px，
+作者与出处记进 `survey/image-credits.json`。
+
 ## 快速开始
 
 ```bash
@@ -72,19 +96,21 @@ profile/
   profile.md                   人读摘要（由 render 生成）
 survey/
   index.html                   调研页：327 风格 / 14 大类 / 点图放大 / 导出 JSON
-  styles.json                  风格清单（真身）
+  styles.json                  风格清单（真身，含 image_policy）
   picks.json                   25 张视觉偏好图数据
-  images/                      39 张本地参考图（已压缩，全部可离线打开）
+  images/                      本地示例图（已压缩，离线可打开）
+  image-credits.json           示例图作者与出处（Pexels / Unsplash）
 references/
   design-checklist.md          画像 → 具体设计数值
   enrichment.md                证据、衰减、冲突、版本语义
   style-catalog.md             14 大类索引（快速查 id 与关键词）
 scripts/
   profile_tool.py              validate / merge / render
+  fetch_style_images.py        按关键词抓真实示例图（需自备图库 key）
   build_survey_js.py           JSON → 浏览器可直接用的 .js
   build_catalog.py             生成 style-catalog.md
 tests/
-  test_profile_tool.py         22 个测试，守护「画像不说谎」
+  test_profile_tool.py         25 个测试，守护「画像不说谎、配图不张冠李戴」
 ```
 
 ## 设计取向（为什么长这样）
