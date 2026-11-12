@@ -122,7 +122,7 @@ class TestMerge(unittest.TestCase):
             self.assertEqual(after["axes"]["density"], 40)       # rich 2 / 5
             self.assertEqual(after["axes"]["realism"], 60)       # photo 3 / 5
             self.assertIsNone(after["axes"]["saturation"], "没数据的轴必须保持 null")
-            self.assertEqual(len(after["liked_styles"]), 2)
+            self.assertEqual(len(after["liked_styles"]), len(before["liked_styles"]) + 2)
             self.assertEqual(after["palette"]["primary"], ["#0b1a2b", "#123b52", "#2a7d8c"])
             self.assertNotEqual(after["profile_version"], before["profile_version"])
             self.assertEqual(len(after["evidence"]), len(before["evidence"]) + 1)

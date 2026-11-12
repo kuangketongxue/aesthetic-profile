@@ -250,6 +250,9 @@ def cmd_merge(args) -> int:
         data["confidence"] = max(float(data.get("confidence") or 0), 0.7)
     elif len(filled) >= 3:
         data["confidence"] = max(float(data.get("confidence") or 0), 0.45)
+    elif len(data.get("liked_styles", [])) >= 5:
+        # 轴没测出来，但「风格偏好」是他亲手选的，这条证据是硬的
+        data["confidence"] = max(float(data.get("confidence") or 0), 0.4)
 
     if args.dry_run:
         print("DRY-RUN 未写入。将要发生的改动：")

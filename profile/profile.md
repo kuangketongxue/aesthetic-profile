@@ -1,9 +1,9 @@
 # 审美画像 · kuangketongxue
 
 > 本文件由 `scripts/profile_tool.py render` 从 `aesthetic-profile.json` 生成，**勿手改**。
-> 版本 0.1.0 ｜ 状态 `seed` ｜ 置信度 0.3 ｜ 更新 2026-11-12
+> 版本 0.2.0 ｜ 状态 `seed` ｜ 置信度 0.4 ｜ 更新 2026-11-12
 
-画像主人：kuangketongxue ｜ 证据 6 条 ｜ 硬规则 4 条
+画像主人：kuangketongxue ｜ 证据 7 条 ｜ 硬规则 4 条
 
 ## 一、八个轴
 
@@ -22,18 +22,26 @@
 
 ## 二、喜欢的风格
 
-（未选。跑 `survey/index.html` 后 merge 一次就会填上）
+| 风格 | 英文 | 权重 | 大类 | 关键词 |
+|---|---|---|---|---|
+| 蓝调时刻 | Blue Hour | 0.7 | 色系与光线 | blue hour, twilight blue, calm |
+| 银河星空 | Milky Way | 0.7 | 自然与地理 | milky way, starfield, deep blue purple |
+| 地球夜景 | Earth from Space | 0.7 | 自然与地理 | earth from space, city lights, deep blue curve |
+| 湖泊倒影 | Lake Reflection | 0.7 | 自然与地理 | lake reflection, still water, mountain mirror |
+| 热带海岛 | Tropical Island | 0.7 | 自然与地理 | tropical island, white sand, turquoise shallows |
+| 浪漫主义 | Romanticism | 0.7 | 艺术流派视觉化 | romanticism, sublime nature, storm |
+| 点彩派 | Pointillism | 0.7 | 艺术流派视觉化 | pointillism, pure dots, optical mixing |
 
 ## 三、色板
 
-- **主色**：（空）
-- **点缀**：（空）
+- **主色**：`#2a4a7a`　`#6a8ab0`　`#c0c8d8`
+- **点缀**：`#1a1f4a`　`#6a5a9a`　`#e0c8a0`
 - **中性**：（空）
 - **避开**：（空）
 
 ## 四、找图关键词
 
-- **正向**（0 个）：（空）
+- **正向**（26 个）：blue hour, twilight blue, calm, gradient, milky way, starfield, deep blue purple, ridge silhouette, earth from space, city lights, deep blue curve, lake reflection, still water, mountain mirror, symmetry, tropical island, white sand, turquoise shallows, palm, romanticism, sublime nature, storm, emotion, pointillism, pure dots, optical mixing
 - **排除**：（空）
 
 ## 五、硬规则（优先级最高）
@@ -59,6 +67,7 @@
 
 | 日期 | 来源 | 强度 | 观察 | 影响 |
 |---|---|---|---|---|
+| 2026-11-12 | survey | strong | 调研页作答：7 个风格 / 0 张图 / 0 道题 | 新增 7 个喜欢的风格：蓝调时刻、银河星空、地球夜景、湖泊倒影、热带海岛、浪漫主义、点彩派；主色 ['#2a4a7a', '#6a8ab0', '#c0c8d8']；关键词 0 → 26 |
 | 2026-11-12 | design-accepted | weak | 在 AI 日报的四个选项里选了「沿用骨架换深蓝/青色科技感配色」，未反对冷色科技方向 | 仅记录，不写入 contexts.web —— 属我给的推荐项，他只是确认，不等于主动偏好 |
 | 2026-11-12 | survey | medium | 认可「一种风格一张代表图」的组织方式，覆盖优先于深度 | 调研页每种风格只挂 1 张氛围参考图，不为单风格堆图 |
 | 2026-11-12 | chat | strong | 把风格范围界定为「所有可作为壁纸/头像/设计的」而非艺术史流派 | 写入 hard_rules 第 4 条；分类改为按用途与视觉特征 |

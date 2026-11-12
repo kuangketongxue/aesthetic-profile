@@ -1,11 +1,11 @@
 {
   "$schema": "./profile.schema.json",
   "schema_version": "1.0",
-  "profile_version": "0.1.0",
+  "profile_version": "0.2.0",
   "updated": "2026-11-12",
   "owner": "kuangketongxue",
   "status": "seed",
-  "confidence": 0.3,
+  "confidence": 0.4,
   "axes": {
     "temperature": null,
     "brightness": null,
@@ -16,16 +16,87 @@
     "realism": null,
     "era": null
   },
-  "liked_styles": [],
+  "liked_styles": [
+    {
+      "id": "s099",
+      "weight": 0.7,
+      "evidence": "survey:2026-11-12"
+    },
+    {
+      "id": "s134",
+      "weight": 0.7,
+      "evidence": "survey:2026-11-12"
+    },
+    {
+      "id": "s136",
+      "weight": 0.7,
+      "evidence": "survey:2026-11-12"
+    },
+    {
+      "id": "s140",
+      "weight": 0.7,
+      "evidence": "survey:2026-11-12"
+    },
+    {
+      "id": "s154",
+      "weight": 0.7,
+      "evidence": "survey:2026-11-12"
+    },
+    {
+      "id": "s228",
+      "weight": 0.7,
+      "evidence": "survey:2026-11-12"
+    },
+    {
+      "id": "s232",
+      "weight": 0.7,
+      "evidence": "survey:2026-11-12"
+    }
+  ],
   "disliked_styles": [],
   "palette": {
-    "primary": [],
-    "accent": [],
+    "primary": [
+      "#2a4a7a",
+      "#6a8ab0",
+      "#c0c8d8"
+    ],
+    "accent": [
+      "#1a1f4a",
+      "#6a5a9a",
+      "#e0c8a0"
+    ],
     "neutral": [],
     "avoid": []
   },
   "keywords": {
-    "positive": [],
+    "positive": [
+      "blue hour",
+      "twilight blue",
+      "calm",
+      "gradient",
+      "milky way",
+      "starfield",
+      "deep blue purple",
+      "ridge silhouette",
+      "earth from space",
+      "city lights",
+      "deep blue curve",
+      "lake reflection",
+      "still water",
+      "mountain mirror",
+      "symmetry",
+      "tropical island",
+      "white sand",
+      "turquoise shallows",
+      "palm",
+      "romanticism",
+      "sublime nature",
+      "storm",
+      "emotion",
+      "pointillism",
+      "pure dots",
+      "optical mixing"
+    ],
     "negative": []
   },
   "hard_rules": [
@@ -110,6 +181,13 @@
       "quote": "沿用骨架换配色",
       "effect": "仅记录，不写入 contexts.web —— 属我给的推荐项，他只是确认，不等于主动偏好",
       "strength": "weak"
+    },
+    {
+      "date": "2026-11-12",
+      "source": "survey",
+      "signal": "调研页作答：7 个风格 / 0 张图 / 0 道题",
+      "effect": "新增 7 个喜欢的风格：蓝调时刻、银河星空、地球夜景、湖泊倒影、热带海岛、浪漫主义、点彩派；主色 ['#2a4a7a', '#6a8ab0', '#c0c8d8']；关键词 0 → 26",
+      "strength": "strong"
     }
   ]
 }
